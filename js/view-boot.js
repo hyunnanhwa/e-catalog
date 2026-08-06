@@ -58,7 +58,7 @@
       var st = cat.settings || {};
       var boot = {
         aspect: cat.aspect || '16:9', slides: slides,
-        bgmYt: cat.bgm_youtube || '', autoplay: cat.bgm_autoplay ? 1 : 0, point: '#1a1a1a',
+        bgmYt: cat.bgm_youtube || '', autoplay: cat.bgm_autoplay ? 1 : 0, point: st.point || '#1a1a1a',
         outerBg: st.outerBg || '', outerImg: st.outerImg || '',
         outerOpacity: st.outerOpacity == null ? 1 : st.outerOpacity, outerBlur: st.outerBlur || 0,
         radius: st.radius == null ? 10 : st.radius,

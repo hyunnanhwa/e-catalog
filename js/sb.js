@@ -104,6 +104,36 @@
     async myInquiries(catalogIds) {
       var { data, error } = await sb.from('form_submissions').select('*').in('catalog_id', catalogIds).order('created_at', { ascending: false });
       if (error) throw error; return data || [];
+    },
+
+    // ── 미디어(Storage) 목록/삭제 ──
+    async listMedia() {
+      var u = await API.requireUser();
+      var { data, error } = await sb.storage.from(BUCKET).list(u.id, { limit: 200, sortBy: { column: 'created_at', order: 'desc' } });
+      if (error) throw error;
+      return (data || []).filter(function (f) { return f.id; }).map(function (f) {
+        var path = u.id + '/' + f.name;
+        return { name: f.name, path: path, url: sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl, size: (f.metadata && f.metadata.size) || 0, created: f.created_at };
+      });
+    },
+    async deleteMedia(path) {
+      var { error } = await sb.storage.from(BUCKET).remove([path]);
+      if (error) throw error;
+    },
+
+    // ── 환경설정: 포인트 컬러(내 모든 카달로그에 일괄 적용, 뷰어 settings.point) ──
+    async getPointColor() {
+      var cats = await API.myCatalogs();
+      for (var i = 0; i < cats.length; i++) { var st = cats[i].settings || {}; if (st.point) return st.point; }
+      return '#1a1a1a';
+    },
+    async setPointColor(hex) {
+      var cats = await API.myCatalogs();
+      for (var i = 0; i < cats.length; i++) {
+        var st = cats[i].settings || {}; st.point = hex;
+        await sb.from('catalogs').update({ settings: st, updated_at: new Date().toISOString() }).eq('id', cats[i].id);
+      }
+      return cats.length;
     }
   };
 

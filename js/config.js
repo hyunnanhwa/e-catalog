@@ -1,11 +1,7 @@
-/* ───────────────────────────────────────────────────────────
-   설정 — 아래 3곳을 본인 Supabase / EmailJS 값으로 채우세요.
-   (README.md 참고)
-   ─────────────────────────────────────────────────────────── */
+
 window.DEMO_CONFIG = {
-  // Supabase 프로젝트 설정 > API 에서 복사
-  SUPABASE_URL: 'https://kzmydjrfygriuozqebin.supabase.co',
-  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6bXlkanJmeWdyaXVvenFlYmluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5Njc3NjAsImV4cCI6MjEwMTU0Mzc2MH0.zNl1cvuz7F6P1ab4XJsFfnqp_ClOdeaKZCGbrUR1IwQ',
+  SUPABASE_URL: 'https://kzmydjrfygriuozqebin.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6bXlkanJmeWdyaXVvenFlYmluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5Njc3NjAsImV4cCI6MjEwMTU0Mzc2MH0.zNl1cvuz7F6P1ab4XJsFfnqp_ClOdeaKZCGbrUR1IwQ',
 
   // 이미지/영상 업로드 버킷 이름 (supabase_setup.sql 에서 생성)
   STORAGE_BUCKET: 'catalog-media',

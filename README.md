@@ -9,16 +9,22 @@ demo_catalog/
 ├─ app.html            카달로그 대시보드 (기존 admin 사이드바 + cx-card 그대로)
 ├─ bgm.html            배경음악 페이지 (기존 bgm.php UI 재현)
 ├─ submissions.html    문의내역 페이지 (기존 submissions.php 재현)
+├─ media.html          미디어 (Storage 업로드 목록·URL복사·삭제)
+├─ tools.html          이미지 도구 (liondev.kr 무료 도구 링크)
+├─ settings.html       환경설정 (포인트 컬러)
 ├─ editor.html         에디터 (기존 catalog-editor.js 재활용)
 ├─ view.html           공개 미리보기 (?id=…, 비로그인 조회 가능)
 ├─ assets/             기존 CSS/JS 그대로 (editor·viewer·fonts·style·print)
 ├─ js/
 │  ├─ config.js        ← Supabase / EmailJS 값 입력
 │  ├─ sb.js            Supabase 데이터 계층(PHP API 대체)
-│  ├─ shell.js         관리자 사이드바+상단바 공용 셸(기존 admin_header 재현)
+│  ├─ shell.js         관리자 사이드바(그룹형)+상단바 공용 셸(기존 admin_header 재현)
 │  ├─ app.js           대시보드 로직
 │  ├─ bgm.js           배경음악 로직
 │  ├─ subs.js          문의내역 로직
+│  ├─ media.js         미디어 로직
+│  ├─ tools.js         이미지 도구 로직
+│  ├─ settings.js      환경설정 로직
 │  ├─ editor-boot.js   에디터 부트 + save/upload/crop 인터셉터
 │  └─ view-boot.js     뷰어 부트 + 문의 전송(Supabase 저장 + 이메일)
 ├─ supabase_setup.sql  테이블 + RLS + Storage 설정

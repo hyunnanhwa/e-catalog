@@ -58,7 +58,7 @@
   (async function () {
     var u = await API.requireUser();
     cats = await API.myCatalogs();
-    ac = buildShell({ active: 'bgm', title: '배경음악', email: u.email });
+    ac = buildShell({ active: 'catalog', title: '배경음악', email: u.email });
     if (!cats.length) { ac.innerHTML = '<div class="card" style="text-align:center;padding:40px"><p class="muted">먼저 <a href="app.html">카달로그</a>를 만들어 주세요.</p></div>'; return; }
     var id = new URLSearchParams(location.search).get('id');
     cat = cats.filter(function (c) { return c.id === id; })[0] || cats[0];
