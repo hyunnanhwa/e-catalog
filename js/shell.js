@@ -5,6 +5,7 @@ function buildShell(opts) {
   var groups = [
     { label: '카달로그', items: [
       { href: 'app.html', ico: '📖', name: '카달로그', key: 'catalog' },
+      { href: 'backups.html', ico: '🗂️', name: '편집 백업', key: 'backups' },
       { href: 'submissions.html', ico: '✉️', name: '문의내역', key: 'subs' },
       { href: 'media.html', ico: '🖼️', name: '미디어', key: 'media' }
     ]},

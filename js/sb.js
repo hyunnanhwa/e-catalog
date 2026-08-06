@@ -5,8 +5,19 @@
   var sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
   var BUCKET = cfg.STORAGE_BUCKET;
 
+  // 다국어 정의 (원본 langs.php와 동일: 코드 → [이름, 이모지, ISO국가코드])
+  var LANGS = {
+    ko: ['한국어', '🇰🇷', 'kr'], en: ['English', '🇺🇸', 'us'], ja: ['日本語', '🇯🇵', 'jp'],
+    zh: ['中文', '🇨🇳', 'cn'], vi: ['Tiếng Việt', '🇻🇳', 'vn'], th: ['ไทย', '🇹🇭', 'th'],
+    es: ['Español', '🇪🇸', 'es'], id: ['Indonesia', '🇮🇩', 'id'], fr: ['Français', '🇫🇷', 'fr'], de: ['Deutsch', '🇩🇪', 'de']
+  };
+
   var API = {
     client: sb,
+    LANGS: LANGS,
+    langName: function (c) { return (LANGS[c] || [c])[0]; },
+    langFlag: function (c) { return (LANGS[c] || ['', '🏳️'])[1]; },
+    langCc: function (c) { return (LANGS[c] || ['', '', 'un'])[2]; },
 
     // ── 인증 ──
     async signUp(email, password) {
@@ -48,6 +59,50 @@
       if (error) throw error;
     },
 
+    // 내 카달로그 전체(언어 사본 포함) — 대시보드 그룹핑용
+    async allMyCatalogs() {
+      var u = await API.requireUser();
+      var { data, error } = await sb.from('catalogs').select('*').eq('user_id', u.id).order('created_at');
+      if (error) throw error; return data || [];
+    },
+
+    // 언어 그룹의 모든 버전(원본 먼저) — 뷰어 국기 스위처/대시보드 공용. 비로그인도 조회 가능(RLS public read).
+    async siblings(cat) {
+      var root = cat.parent_id || cat.id;
+      var { data, error } = await sb.from('catalogs')
+        .select('id,lang,title,parent_id,settings,bgm_youtube,bgm_autoplay,created_at')
+        .or('id.eq.' + root + ',parent_id.eq.' + root);
+      if (error) throw error;
+      return (data || []).sort(function (a, b) {
+        if (!a.parent_id && b.parent_id) return -1;
+        if (a.parent_id && !b.parent_id) return 1;
+        return (a.created_at || '') < (b.created_at || '') ? -1 : 1;
+      });
+    },
+
+    // 언어 추가 = 원본(그룹 루트) 복제 + 슬라이드 복제 (parent_id=root, lang=새언어)
+    async addLanguage(baseId, lang) {
+      if (!LANGS[lang]) throw new Error('지원하지 않는 언어입니다.');
+      var u = await API.requireUser();
+      var base = await API.getCatalog(baseId);
+      var root = base.parent_id || base.id;
+      var { data: exist } = await sb.from('catalogs').select('id').or('id.eq.' + root + ',parent_id.eq.' + root).eq('lang', lang);
+      if (exist && exist.length) throw new Error('이미 있는 언어입니다.');
+      var { data: nc, error } = await sb.from('catalogs').insert({
+        user_id: u.id, title: base.title, aspect: base.aspect, settings: base.settings || {},
+        bgm_youtube: base.bgm_youtube || null, bgm_autoplay: base.bgm_autoplay || false,
+        lang: lang, parent_id: root
+      }).select().single();
+      if (error) throw error;
+      var slides = await API.getSlides(baseId);
+      var rows = slides.length
+        ? slides.map(function (s, i) { return { catalog_id: nc.id, sort_order: i, bg_color: s.bg_color, elements: s.elements || [] }; })
+        : [{ catalog_id: nc.id, sort_order: 0, elements: [] }];
+      var { error: e2 } = await sb.from('slides').insert(rows);
+      if (e2) throw e2;
+      return nc;
+    },
+
     // ── 슬라이드 ──
     async getSlides(catalogId) {
       var { data, error } = await sb.from('slides').select('*').eq('catalog_id', catalogId).order('sort_order');
@@ -56,6 +111,8 @@
 
     // ── 저장(에디터 save 대체): 슬라이드 upsert + 삭제 + 카달로그 설정 ──
     async saveCatalog(catalogId, payload) {
+      // 0) 저장 직전 상태 자동 백업(원본 catalog_api 동작)
+      try { await API._snapshot(catalogId, 'save'); } catch (e) { /* 백업 실패해도 저장은 진행 */ }
       // 1) 카달로그 레벨(aspect, settings)
       await API.updateCatalog(catalogId, { aspect: payload.aspect || '16:9', settings: payload.settings || {} });
       // 2) 슬라이드 반영
@@ -134,6 +191,40 @@
         await sb.from('catalogs').update({ settings: st, updated_at: new Date().toISOString() }).eq('id', cats[i].id);
       }
       return cats.length;
+    },
+
+    // ── 편집 백업(catalog_backups): 저장 직전 스냅샷 + 복원 + 최근 30개 유지 ──
+    async _snapshot(catalogId, reason) {
+      var slides = await API.getSlides(catalogId);
+      if (!slides.length) return;
+      var cat = await API.getCatalog(catalogId);
+      var snap = {
+        aspect: cat.aspect || '16:9', settings: cat.settings || {},
+        slides: slides.map(function (s) { return { sort_order: s.sort_order, bg_color: s.bg_color, elements: s.elements || [] }; })
+      };
+      await sb.from('catalog_backups').insert({ catalog_id: catalogId, snapshot: snap, slide_count: slides.length, reason: reason || 'save' });
+      var { data: old } = await sb.from('catalog_backups').select('id').eq('catalog_id', catalogId).order('created_at', { ascending: false }).range(30, 999);
+      if (old && old.length) await sb.from('catalog_backups').delete().in('id', old.map(function (b) { return b.id; }));
+    },
+    async listBackups(catalogId) {
+      var { data, error } = await sb.from('catalog_backups').select('id,slide_count,reason,created_at').eq('catalog_id', catalogId).order('created_at', { ascending: false });
+      if (error) throw error; return data || [];
+    },
+    async restoreBackup(backupId, catalogId) {
+      var { data: bk, error } = await sb.from('catalog_backups').select('*').eq('id', backupId).single();
+      if (error) throw error;
+      var snap = bk.snapshot;
+      if (!snap || !Array.isArray(snap.slides)) throw new Error('백업 데이터가 올바르지 않습니다.');
+      await API._snapshot(catalogId, 'restore');   // 복원 직전 현재본도 백업(되돌리기 가능)
+      var existing = await API.getSlides(catalogId);
+      for (var i = 0; i < existing.length; i++) await sb.from('slides').delete().eq('id', existing[i].id);
+      var rows = snap.slides.map(function (s, idx) { return { catalog_id: catalogId, sort_order: idx, bg_color: s.bg_color || null, elements: s.elements || [] }; });
+      if (rows.length) { var { error: e2 } = await sb.from('slides').insert(rows); if (e2) throw e2; }
+      await API.updateCatalog(catalogId, { aspect: snap.aspect || '16:9', settings: snap.settings || {} });
+    },
+    async deleteBackup(backupId) {
+      var { error } = await sb.from('catalog_backups').delete().eq('id', backupId);
+      if (error) throw error;
     }
   };
 

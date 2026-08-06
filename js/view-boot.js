@@ -56,13 +56,19 @@
       var rows = await API.getSlides(CATALOG_ID);
       var slides = rows.map(function (r) { var els = Array.isArray(r.elements) ? r.elements : []; ALL_ELS = ALL_ELS.concat(els); return { bg: r.bg_color, elements: els }; });
       var st = cat.settings || {};
+      // 다국어: 같은 그룹의 모든 언어 버전 → 국기 스위처(원본 langs.php와 동일 구조)
+      var langs = [];
+      try {
+        var sibs = await API.siblings(cat);
+        if (sibs.length > 1) langs = sibs.map(function (s) { return { lang: s.lang, token: s.id, name: API.langName(s.lang), flag: API.langFlag(s.lang), cc: API.langCc(s.lang) }; });
+      } catch (e) { /* 스위처 없이 진행 */ }
       var boot = {
         aspect: cat.aspect || '16:9', slides: slides,
         bgmYt: cat.bgm_youtube || '', autoplay: cat.bgm_autoplay ? 1 : 0, point: st.point || '#1a1a1a',
         outerBg: st.outerBg || '', outerImg: st.outerImg || '',
         outerOpacity: st.outerOpacity == null ? 1 : st.outerOpacity, outerBlur: st.outerBlur || 0,
         radius: st.radius == null ? 10 : st.radius,
-        token: cat.id, formUrl: 'sb:form', langs: [], curLang: cat.lang || 'ko', preview: false
+        token: cat.id, formUrl: 'sb:form', langs: langs, curLang: cat.lang || 'ko', preview: false
       };
       var tag = document.createElement('script'); tag.type = 'application/json'; tag.id = 'cv-boot';
       tag.textContent = JSON.stringify(boot); document.body.appendChild(tag);

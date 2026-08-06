@@ -71,6 +71,22 @@ create policy subs_read   on public.form_submissions for select
 create policy subs_delete on public.form_submissions for delete
   using (exists (select 1 from public.catalogs c where c.id = form_submissions.catalog_id and c.user_id = auth.uid()));
 
+-- ── 2-b. 편집 백업(저장 직전 스냅샷, 카달로그당 최근 30개) ──
+create table if not exists public.catalog_backups (
+  id          uuid primary key default gen_random_uuid(),
+  catalog_id  uuid not null references public.catalogs(id) on delete cascade,
+  snapshot    jsonb not null,
+  slide_count int not null default 0,
+  reason      text not null default 'save',
+  created_at  timestamptz default now()
+);
+create index if not exists idx_backups_cat on public.catalog_backups(catalog_id, created_at desc);
+alter table public.catalog_backups enable row level security;
+drop policy if exists backups_all on public.catalog_backups;
+create policy backups_all on public.catalog_backups for all
+  using      (exists (select 1 from public.catalogs c where c.id = catalog_backups.catalog_id and c.user_id = auth.uid()))
+  with check (exists (select 1 from public.catalogs c where c.id = catalog_backups.catalog_id and c.user_id = auth.uid()));
+
 -- ── 3. Storage 버킷(이미지/영상) ───────────────────────────
 insert into storage.buckets (id, name, public)
 values ('catalog-media', 'catalog-media', true)

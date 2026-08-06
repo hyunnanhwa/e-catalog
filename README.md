@@ -8,6 +8,7 @@ demo_catalog/
 ├─ index.html          로그인 / 회원가입 (Supabase Auth)
 ├─ app.html            카달로그 대시보드 (기존 admin 사이드바 + cx-card 그대로)
 ├─ bgm.html            배경음악 페이지 (기존 bgm.php UI 재현)
+├─ backups.html        편집 백업 (저장 직전 스냅샷 30개 자동보관·되돌리기)
 ├─ submissions.html    문의내역 페이지 (기존 submissions.php 재현)
 ├─ media.html          미디어 (Storage 업로드 목록·URL복사·삭제)
 ├─ tools.html          이미지 도구 (liondev.kr 무료 도구 링크)
@@ -22,6 +23,7 @@ demo_catalog/
 │  ├─ app.js           대시보드 로직
 │  ├─ bgm.js           배경음악 로직
 │  ├─ subs.js          문의내역 로직
+│  ├─ backups.js       편집 백업 로직
 │  ├─ media.js         미디어 로직
 │  ├─ tools.js         이미지 도구 로직
 │  ├─ settings.js      환경설정 로직
@@ -80,4 +82,7 @@ EMAILJS: { ENABLED:true, PUBLIC_KEY:'...', SERVICE_ID:'...', TEMPLATE_ID:'...' }
 - **미리보기**(`view.html?id=…`)는 로그인 없이 누구나 조회 가능(RLS로 읽기만 공개).
 - **이미지/영상 업로드**는 Supabase Storage(`catalog-media`)에 저장, 공개 URL로 렌더.
 - **게시하기 버튼은 없음**(요청). 저장하면 링크 공유로 바로 노출됩니다.
-- 다국어(언어별 복제)·PDF 인쇄·자동 AI번역은 데모에서 제외(원본 프로젝트 기능).
+- **다국어**: 대시보드에서 「🌐 언어 추가」로 원본을 복제해 언어 버전을 만들고 글자만 바꾸면, 미리보기에 **국기(flagcdn.com 이미지)** 스위처가 자동으로 뜹니다.
+- **편집 백업**: 저장할 때마다 직전 상태가 자동 백업(카달로그당 최근 30개). 편집 백업 페이지에서 되돌리기.
+  ※ 이 기능을 쓰려면 `supabase_setup.sql`을 **다시 실행**하거나, 파일 안 `catalog_backups` 블록만 SQL Editor에서 실행하세요. (기존 테이블은 `if not exists`라 안전)
+- PDF 인쇄·자동 AI번역은 데모에서 제외(원본 프로젝트 기능).
