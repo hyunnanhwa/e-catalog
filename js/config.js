@@ -4,7 +4,7 @@
    ─────────────────────────────────────────────────────────── */
 window.DEMO_CONFIG = {
   // Supabase 프로젝트 설정 > API 에서 복사
-  SUPABASE_URL: 'https://kzmydjrfygriuozqebin.supabase.co',
+SUPABASE_URL: 'https://kzmydjrfygriuozqebin.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_ynBkWVhvLyGIF9o0mM9aAg_bCi36cDA',
 
   // 이미지/영상 업로드 버킷 이름 (supabase_setup.sql 에서 생성)
