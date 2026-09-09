@@ -149,16 +149,17 @@
     // 드롭다운: 현재 국기 + 아래화살표 → 클릭(또는 PC 호버)하면 국기 목록
     langsHtml='<div class="cv-langs" id="cvLangs"><button class="cv-lang-trig" id="cvLangTrig" aria-label="언어 선택">'+flagImg(curL,'cv-flag-img cv-flag-cur')+'<span class="cv-lang-arr" aria-hidden="true">▾</span></button><div class="cv-lang-menu">'+items+'</div></div>';
   }
-  root.innerHTML=
-    bgLayerHtml+langsHtml+
+  var topHtml=
     '<div class="cv-top">'+
       (boot.bgmYt?'<button class="cv-cbtn cv-bgm" id="cvBgm" aria-label="배경음악">'+SVG_MUTE+'</button>':'')+
       '<button class="cv-cbtn cv-play" id="cvPlay" aria-label="재생">'+SVG_PLAY+'</button>'+
       '<button class="cv-cbtn cv-full" id="cvFull" aria-label="전체보기" title="전체보기">'+SVG_EXPAND+'</button>'+
-    '</div>'+
+    '</div>';
+  root.innerHTML=
+    bgLayerHtml+
     '<div class="cv-mid">'+
       '<button class="cv-nav cv-prev" id="cvPrev" aria-label="이전"><svg viewBox="0 0 320 512" aria-hidden="true"><path fill="currentColor" d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></button>'+
-      '<div class="cv-stage-wrap"><div class="cv-stage" id="cvStage" style="aspect-ratio:'+asp()+';border-radius:'+(boot.radius==null?10:boot.radius)+'px">'+slidesHtml+'</div></div>'+
+      '<div class="cv-stage-wrap">'+langsHtml+topHtml+'<div class="cv-stage" id="cvStage" style="aspect-ratio:'+asp()+';border-radius:'+(boot.radius==null?10:boot.radius)+'px">'+slidesHtml+'</div></div>'+
       '<button class="cv-nav cv-next" id="cvNext" aria-label="다음"><svg viewBox="0 0 320 512" aria-hidden="true"><path fill="currentColor" d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></button>'+
     '</div>'+
     '<div class="cv-bottom">'+

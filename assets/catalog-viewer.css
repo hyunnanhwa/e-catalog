@@ -8,7 +8,7 @@ body.cv-body { background:#ffffff; font-family:-apple-system,"Apple SD Gothic Ne
 
 /* 가운데: 카달로그(축소) + 좌우 네비 — 바깥 여백으로 배경 노출 */
 .cv-mid { position:absolute; inset:0; z-index:1; display:flex; align-items:center; justify-content:center; gap:50px; padding:10vh 5vw 15vh; }
-.cv-stage-wrap { height:100%; display:flex; align-items:center; justify-content:center; min-width:0; }
+.cv-stage-wrap { position:relative; height:100%; display:flex; align-items:center; justify-content:center; min-width:0; }
 .cv-stage { position:relative; height:100%; max-height:100%; max-width:100%; aspect-ratio:16/9; background:#fff; border-radius:10px;
   overflow:hidden; box-shadow:0 18px 55px rgba(0,0,0,.35); container-type:size;
   font-family:'Pretendard',-apple-system,"Apple SD Gothic Neo",sans-serif; }
@@ -35,7 +35,7 @@ body.cv-body { background:#ffffff; font-family:-apple-system,"Apple SD Gothic Ne
 .cv-nav[disabled] { opacity:.3; cursor:default; }
 
 /* 우상단 컨트롤: 재생 + BGM (가로 배열, 카달로그 바깥) */
-.cv-top { position:absolute; top:25px; right:27.5%; z-index:30; display:flex; gap:10px; }
+.cv-top { position:absolute; bottom:calc(100% + 15px); right:0; z-index:30; display:flex; gap:10px; }
 .cv-cbtn { width:44px; height:44px; border:0; border-radius:50%; background:var(--pt); color:#fff; cursor:pointer;
   font-size:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(0,0,0,.3); }
 .cv-cbtn:hover { filter:brightness(1.12); }
@@ -152,7 +152,7 @@ body.cv-body { background:#ffffff; font-family:-apple-system,"Apple SD Gothic Ne
 
 /* 다국어 언어 전환 (국기, 좌상단) */
 /* 언어 드롭다운: 현재 국기 + 아래화살표 → 클릭(또는 PC 호버) 시 국기 목록 */
-.cv-langs { position:absolute; top:35px; left:27.5%; z-index:31; }
+.cv-langs { position:absolute; bottom:calc(100% + 26px); left:0; z-index:31; }
 .cv-lang-trig { display:flex; align-items:center; gap:6px; border:0; background:none; padding:0; cursor:pointer; }
 .cv-lang-trig .cv-flag-cur { filter:none; opacity:1; }
 .cv-lang-arr { color:#fff; font-size:15px; line-height:1; text-shadow:0 1px 3px rgba(0,0,0,.55); transition:transform .2s; }
@@ -176,10 +176,10 @@ body.cv-body { background:#ffffff; font-family:-apple-system,"Apple SD Gothic Ne
 #cv.cv-mobile .cv-nav { width:40px; height:40px; }
 #cv.cv-mobile .cv-ind { font-size:12px; }
 #cv.cv-mobile .cv-cbtn { width:40px; height:40px; }
-#cv.cv-mobile .cv-top { top:25px; right:25px; }
+#cv.cv-mobile .cv-top { bottom:calc(100% + 6px); right:0; top:auto; }
 #cv.cv-mobile .cv-play { font-size:14px; }
 #cv.cv-mobile .cv-full { font-size:16px; }
-#cv.cv-mobile .cv-langs { top:25px; left:25px; }
+#cv.cv-mobile .cv-langs { bottom:calc(100% + 6px); left:0; top:auto; }
 #cv.cv-mobile .cv-flag-img { width:28px; }
 #cv.cv-mobile .cv-play svg, #cv.cv-mobile .cv-full svg { width:1em; height:1em; }
 /* 전체보기 시 하단 숨김 */

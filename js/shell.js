@@ -25,9 +25,11 @@ function buildShell(opts) {
   var side = '<aside class="sidebar">'
     + '<div class="sb-top"><div class="sb-brand">📖 전자카달로그</div><div class="sb-admin">' + shEsc(opts.email || '') + '</div></div>'
     + '<nav class="sb-nav">' + nav + '</nav></aside>';
+  var demoBadge = (window.API && window.API.__demo)
+    ? '<span class="ab-demo" title="Supabase 미설정 — 이 브라우저에만 저장되는 체험모드입니다. config.js에 Supabase 값을 넣으면 실서버로 전환됩니다.">🧪 데모모드(브라우저 저장)</span>' : '';
   var main = '<div class="admin-main">'
     + '<header class="adminbar"><span class="ab-title">' + shEsc(opts.title || '') + '</span>'
-    + '<div class="ab-user"><span class="muted sm">' + shEsc(opts.email || '') + '</span> <a class="ab-logout" href="#" id="shLogout">로그아웃</a></div></header>'
+    + '<div class="ab-user">' + demoBadge + '<span class="muted sm">' + shEsc(opts.email || '') + '</span> <a class="ab-logout" href="#" id="shLogout">로그아웃</a></div></header>'
     + '<main class="admin-content" id="ac"></main></div>';
   document.body.className = 'admin bd-admin';
   document.body.innerHTML = side + main;

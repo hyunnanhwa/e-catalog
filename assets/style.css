@@ -1,4 +1,4 @@
-:root { --fg:#1f2937; --muted:#6b7280; --line:#e5e7eb; --brand:#1a1a1a; --bg:#f8fafc; }
+:root { --fg:#1f2937; --muted:#6b7280; --line:#e5e7eb; --brand:#1a1a1a; --bg:#f8fafc; font-size:17px; }
 * { box-sizing:border-box; }
 body { margin:0; font-family:-apple-system,"Apple SD Gothic Neo",system-ui,sans-serif; color:var(--fg); background:var(--bg); }
 .topbar { display:flex; align-items:center; justify-content:space-between; padding:13px 20px; background:#111827; border-bottom:1px solid #1f2937; }
@@ -9,7 +9,7 @@ body { margin:0; font-family:-apple-system,"Apple SD Gothic Neo",system-ui,sans-
 h1 { font-size:1.4rem; margin:0 0 1rem; }
 .flash { background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; padding:10px 14px; border-radius:8px; margin-bottom:16px; font-size:.9rem; }
 .err { color:#b91c1c; }
-form { background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; max-width:380px; }
+form { background:#fff; border-radius:12px; max-width:380px; }
 form label { display:block; margin-bottom:12px; font-size:.85rem; color:var(--muted); }
 form input { display:block; width:auto; margin-top:4px; padding:9px 11px; border:1px solid var(--line); border-radius:8px; font-size:1rem; }
 .auth-form input { width:100%; box-sizing:border-box; }
@@ -74,7 +74,7 @@ body.admin { display:flex; min-height:100vh; background:var(--bg); }
 .ab-logout { color:var(--muted); text-decoration:none; font-size:.82rem; padding:6px 12px; border:1px solid var(--line);
             border-radius:7px; transition:background .12s, color .12s; }
 .ab-logout:hover { background:#f9fafb; color:var(--fg); }
-.admin-content { padding:26px 24px; max-width:none; width:100%; }
+.admin-content { padding:26px 24px; max-width:55%; width:100%; }
 .admin-content h1 { font-size:1.3rem; }
 @media (max-width:760px){
   body.admin { flex-direction:column; }
@@ -506,8 +506,8 @@ td.center, .center { text-align:center; }
 .bgm-auto { display:flex; align-items:center; gap:8px; padding:14px 4px 16px; font-size:.9rem; }
 .bgm-empty { text-align:center; padding:26px 10px; line-height:1.7; }
 .bgm-form .btn-primary { width:100%; }
-.bgm-preview-frame { border:1px solid var(--line); border-radius:10px; overflow:hidden; background:#f1f5f9; }
-.bgm-preview-frame iframe { width:100%; aspect-ratio:16/9; border:0; display:block; }
+.bgm-preview-frame { aspect-ratio:16/9; border:1px solid var(--line); border-radius:10px; overflow:hidden; background:#f1f5f9; }
+.bgm-preview-frame iframe { width:100%; height:100%; border:0; display:block; }
 
 /* ===================== 이미지 도구 (liondev.kr 연동) ===================== */
 .tool-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; margin-top:14px; }
@@ -574,7 +574,7 @@ a.btn-sm:hover { background:var(--bg); }
 .sub-contacts { display:flex; gap:16px; flex-wrap:wrap; margin-top:5px; font-size:.86rem; color:var(--fg); }
 .sub-contacts a { color:var(--brand); text-decoration:none; }
 .sub-msg { margin-top:7px; padding:9px 11px; background:var(--bg); border-radius:8px; font-size:.9rem; line-height:1.5; white-space:pre-wrap; word-break:break-word; }
-.sub-acts { display:flex; flex-direction:column; gap:6px; flex:0 0 auto; }
+.sub-acts { display:flex; gap:6px; flex:0 0 auto; align-items:center; }
 .sub-acts form { margin:0; }
 .sub-empty { text-align:center; padding:48px 0; }
 .se-ico { font-size:2.6rem; margin-bottom:8px; }
@@ -620,6 +620,51 @@ a.btn-sm:hover { background:var(--bg); }
 .bgm-custom-input { width:100%; box-sizing:border-box; margin:2px 0 10px; padding:8px 11px; border:1px solid var(--line); border-radius:8px; font-size:.9rem; }
 .bgm-custom-row { border-top:1px dashed var(--line); margin-top:6px; padding-top:10px; }
 
+
+/* ═══════════ 업체용 UI 다듬기 (기능 불변·디자인/레이아웃만) ═══════════ */
+/* 좁은 화면에서는 본문 폭을 넓혀 답답하지 않게 */
+.wide .admin-content { max-width:100%; }
+@media (max-width:1400px){ .admin-content { max-width:80%; } }
+@media (max-width:1024px){ .admin-content { max-width:100%; } }
+.card-head h2, .sub-h2 { font-size:1.2rem; font-weight:700; letter-spacing:-.01em; }
+.card { padding:22px 24px; }
+.btn-primary { padding:11px 20px; font-size:1rem; }
+
+/* 문의내역 요약카드 (cms-dev 문의관리 UI 참고) — 기존 is_read/mailed 데이터로 표시만 */
+.subs-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:18px; }
+.subs-stats .sc { background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px;
+  display:flex; flex-direction:column; gap:6px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.subs-stats .sc-ico { width:36px; height:36px; border-radius:10px; display:inline-flex; align-items:center;
+  justify-content:center; font-size:1.05rem; }
+.subs-stats .sc-ico.all { background:#f1f5f9; } .subs-stats .sc-ico.unread { background:#eef2ff; }
+.subs-stats .sc-ico.read { background:#e0f2fe; } .subs-stats .sc-ico.mail { background:#dcfce7; }
+.subs-stats .sc-label { color:var(--muted); font-size:.82rem; font-weight:500; }
+.subs-stats .sc-num { font-size:1.7rem; font-weight:700; letter-spacing:-.02em; line-height:1.1; }
+@media (max-width:720px){ .subs-stats { grid-template-columns:repeat(2,1fr); } }
+
+/* 미디어 용량 경고 배지 (좌상단 빨간 !) */
+.media-thumb { position:relative; }
+.media-warn { position:absolute; top:8px; left:8px; width:26px; height:26px; border-radius:50%;
+  background:#dc2626; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800;
+  font-size:1rem; line-height:1; cursor:help; box-shadow:0 2px 6px rgba(220,38,38,.45); border:2px solid #fff; z-index:2; }
+.media-warn::after { content:attr(data-tip); position:absolute; left:-6px; top:32px; width:176px; background:#111827;
+  color:#fff; font-size:.74rem; font-weight:500; line-height:1.45; padding:9px 11px; border-radius:9px; opacity:0;
+  pointer-events:none; transform:translateY(-4px); transition:opacity .12s, transform .12s; z-index:6;
+  box-shadow:0 8px 20px rgba(0,0,0,.28); }
+.media-warn:hover::after { opacity:1; transform:translateY(0); }
+.media-card.big .media-meta { color:#b91c1c; font-weight:600; }
+
+/* 편집 백업 — 여백 축소·밀도 */
+.bk-list { list-style:none; margin:6px 0 0; padding:0; }
+.bk-item { display:flex; align-items:center; gap:12px; padding:15px 0; border-radius:10px; }
+.bk-item + .bk-item { border-top:1px solid var(--line); }
+.bk-item:hover { background:#f9fafb; }
+.bk-when { font-weight:600; font-size:.94rem; }
+.bk-meta { color:var(--muted); font-size:.82rem; }
+.bk-acts { margin-left:auto; display:flex; gap:10px; flex:0 0 auto; }
+.bk-empty { text-align:center; padding:34px 0; color:var(--muted); }
+.bk-empty .se-ico { font-size:2.4rem; margin-bottom:6px; }
+
 /* ── 데모 대시보드/백업 추가 스타일 ── */
 .cx-topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
 .cx-groups { display:flex; flex-direction:column; gap:20px; }
@@ -629,3 +674,4 @@ a.btn-sm:hover { background:var(--bg); }
 .cx-flag-img { display:inline-block; vertical-align:middle; }
 .bk-pick { margin:2px 0 14px; }
 .bk-pick select { margin-left:6px; padding:6px 10px; border:1px solid var(--line); border-radius:8px; font-size:.86rem; }
+.ab-demo { display:inline-block; margin-right:10px; padding:3px 9px; border-radius:999px; font-size:.72rem; font-weight:700; color:#7c2d12; background:#ffedd5; border:1px solid #fed7aa; }

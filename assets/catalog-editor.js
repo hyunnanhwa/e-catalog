@@ -44,6 +44,9 @@
     var mid=e.tgrad3?(','+(e.gc3||'#22d3ee')):'';
     return 'background:linear-gradient('+(e.gAngle==null?90:e.gAngle)+'deg,'+(e.gc1||'#ff5a5a')+mid+','+(e.gc2||'#5a7bff')+');-webkit-background-clip:text;background-clip:text;color:transparent;'; }
   function aspNum(){ var p=(S.aspect||'16:9').split(':'); return (+p[0]||16)/(+p[1]||9); }
+  // 에디터 확대·축소(뷰 전용, 저장 안 함) — 캔버스 표시 크기만 조절
+  var edZoom=1;
+  function applyZoom(){ var w=document.querySelector('.ed-canvas-wrap'); if(!w)return; w.style.width=(edZoom*100)+'%'; w.style.maxWidth=Math.round(1100*edZoom)+'px'; }
 
   // ── DOM 골격 ──────────────────────────────────────────────
   var root = document.getElementById('editor');
@@ -370,6 +373,9 @@
         +'<div class="pp-row"><label>대표 비율</label><div class="pp-ctl"><select id="ppArPreset">'+arPresetOpts+'</select></div></div>'
         +'<div class="pp-ar"><input type="number" id="ppArW" min="1" max="9999" step="1" value="'+aw+'"><span class="pp-ar-x">×</span><input type="number" id="ppArH" min="1" max="9999" step="1" value="'+ah+'"><span class="pp-ar-u">px</span></div>'
         +'<p class="pp-hint">가로·세로(px)로 비율을 정하거나 대표 비율을 선택하세요. 미지정 시 16:9.</p></div>'
+        +'<div class="pp-sec"><div class="pp-h">카달로그 크기 (확대·축소)</div>'
+        +row('크기','<input type="range" id="ppZoom" min="40" max="200" step="5" value="'+Math.round(edZoom*100)+'"><span class="pp-num">'+Math.round(edZoom*100)+'%</span>')
+        +'<p class="pp-hint">편집 화면에서만 확대·축소됩니다(저장·게시에는 영향 없음).</p></div>'
         +'<div class="pp-sec"><div class="pp-h">카달로그 모서리 곡선</div>'
         +row('둥글기','<input type="range" id="ppStageRad" min="0" max="60" value="'+sr+'"><span class="pp-num">'+sr+'</span>')+'</div>'
         +'<div class="pp-sec"><div class="pp-h">페이지 배경 (현재 페이지)</div>'
@@ -389,6 +395,7 @@
       if(arW) arW.addEventListener('change',setAspect);
       if(arH) arH.addEventListener('change',setAspect);
       var arP=document.getElementById('ppArPreset'); if(arP) arP.addEventListener('change',function(){ if(!arP.value)return; var pr=arP.value.split(':'); S.aspect=(+pr[0])+':'+(+pr[1]); applyAspect(); markDirty(); renderProps(); });
+      var zm=document.getElementById('ppZoom'); if(zm) zm.addEventListener('input',function(){ edZoom=(+zm.value)/100; zm.nextSibling.textContent=zm.value+'%'; applyZoom(); });
       var srI=document.getElementById('ppStageRad'); if(srI) srI.addEventListener('input',function(){ S.stageRadius=+srI.value; srI.nextSibling.textContent=srI.value; elCanvas.style.borderRadius=S.stageRadius+'px'; markDirty(); });
       var bg=document.getElementById('ppBg'); if(bg) bg.addEventListener('input',function(){ cur().bg=bg.value; markDirty(); renderCanvas(); renderSlides(); });
       var ob=document.getElementById('ppOuterBg'); if(ob) ob.addEventListener('input',function(){ S.outerBg=ob.value; S.outerImg=''; applyOuter(); markDirty(); });

@@ -18,15 +18,15 @@
     host.innerHTML = '<p class="muted">불러오는 중…</p>';
     try {
       var bks = await API.listBackups(curId);
-      if (!bks.length) { host.innerHTML = '<div class="sub-empty"><div class="se-ico">🗂️</div><p class="muted">아직 백업이 없습니다. 편집 후 저장하면 자동으로 쌓입니다.</p></div>'; return; }
-      host.innerHTML = '<ul class="sub-list">' + bks.map(function (b) {
+      if (!bks.length) { host.innerHTML = '<div class="bk-empty"><div class="se-ico">🗂️</div><p>아직 백업이 없습니다. 편집 후 저장하면 자동으로 쌓입니다.</p></div>'; return; }
+      host.innerHTML = '<ul class="bk-list">' + bks.map(function (b, i) {
         var restore = b.reason === 'restore';
-        return '<li class="sub-item"><div class="sub-main"><div class="sub-top">'
-          + '<span class="sub-name">' + esc(fmt(b.created_at)) + '</span>'
+        return '<li class="bk-item">'
           + '<span class="sub-badge ' + (restore ? 'off' : 'ok') + '">' + (restore ? '복원 직전' : '저장 직전') + '</span>'
-          + '<span class="muted sm">페이지 ' + (b.slide_count | 0) + '개</span></div></div>'
-          + '<div class="sub-acts"><button class="btn-xs bk-restore" data-id="' + b.id + '" style="border-color:#93c5fd;color:#1d4ed8">되돌리기</button>'
-          + '<button class="btn-xs danger bk-del" data-id="' + b.id + '">삭제</button></div></li>';
+          + '<span class="bk-when">' + esc(fmt(b.created_at)) + (i === 0 ? ' <span class="muted sm">· 최신</span>' : '') + '</span>'
+          + '<span class="bk-meta">페이지 ' + (b.slide_count | 0) + '개</span>'
+          + '<span class="bk-acts"><button class="btn-xs bk-restore" data-id="' + b.id + '" style="border-color:#93c5fd;color:#1d4ed8">되돌리기</button>'
+          + '<button class="btn-xs danger bk-del" data-id="' + b.id + '">삭제</button></span></li>';
       }).join('') + '</ul>';
       host.querySelectorAll('.bk-restore').forEach(function (btn) {
         btn.addEventListener('click', async function () {
@@ -48,9 +48,9 @@
   }
 
   function render() {
-    ac.innerHTML = '<section class="card"><div class="sub-head"><div>'
-      + '<h2 class="sub-h2">편집 백업 <span class="muted">(최근 30개 자동 보관)</span></h2>'
-      + '<p class="muted sm">저장할 때마다 <b>직전 상태</b>가 자동 백업됩니다. 문제가 생기면 원하는 시점으로 되돌리세요.</p></div></div>'
+    ac.innerHTML = '<section class="card bk-card"><div class="sub-head"><div>'
+      + '<h2 class="sub-h2">편집 백업 <span class="muted sm">최근 10개 자동 보관</span></h2>'
+      + '<p class="muted sm">저장할 때마다 <b>직전 상태</b>가 자동 백업돼요. 잘못 고쳤을 때 원하는 시점으로 되돌리세요.</p></div></div>'
       + picker() + '<div id="bkList"></div></section>';
     var sel = document.getElementById('bkSel');
     if (sel) sel.addEventListener('change', function () { curId = sel.value; renderList(); });
