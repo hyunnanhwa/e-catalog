@@ -8,11 +8,11 @@ body.ed-body { font-family:-apple-system,"Apple SD Gothic Neo",system-ui,sans-se
 /* 상단바 */
 .ed-top { height:52px; flex:0 0 auto; background:#fff; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:14px; padding:0 16px; }
 .ed-back { color:var(--fg); text-decoration:none; font-size:.9rem; font-weight:600; }
-.ed-title { font-weight:700; font-size:.95rem; }
-.ed-tools { display:flex; gap:6px; margin-left:10px; }
+.ed-title { display:none; }
+.ed-tools { display:flex; gap:6px; margin-left:auto; }
 .ed-tbtn { background:#f3f4f6; border:1px solid var(--line); border-radius:8px; padding:7px 12px; font-size:.85rem; cursor:pointer; }
 .ed-tbtn:hover { background:#e9edf2; }
-.ed-right-top { margin-left:auto; display:flex; align-items:center; gap:12px; }
+.ed-right-top { display:flex; align-items:center; gap:12px; }
 .ed-status { font-size:.8rem; color:var(--muted); }
 .ed-status.dirty { color:#dc2626; font-weight:700; }
 .ed-save { background:var(--brand); color:#fff; border:0; border-radius:8px; padding:8px 18px; font-size:.9rem; cursor:pointer; font-weight:600; }

@@ -55,18 +55,18 @@
       '<a class="ed-back" href="app.html">← 나가기</a>'+
       '<div class="ed-title">'+esc(boot.title)+'</div>'+
       '<div class="ed-tools">'+
-        '<button data-add="text" class="ed-tbtn">＋ 텍스트</button>'+
-        '<button data-add="image" class="ed-tbtn">＋ 이미지</button>'+
-        '<button data-add="video" class="ed-tbtn">＋ 영상</button>'+
-        '<button data-add="tab" class="ed-tbtn">＋ 탭</button>'+
-        '<button data-add="box" class="ed-tbtn">＋ 색상박스</button>'+
-        '<button data-add="line" class="ed-tbtn">＋ 선</button>'+
-        '<button data-add="carousel" class="ed-tbtn">＋ 슬라이드</button>'+
-        '<button data-add="form" class="ed-tbtn">＋ 문의폼</button>'+
-        '<button data-addslide class="ed-tbtn">＋ 페이지</button>'+
+        '<button data-add="text" class="ed-tbtn">텍스트</button>'+
+        '<button data-add="image" class="ed-tbtn">이미지</button>'+
+        '<button data-add="video" class="ed-tbtn">영상</button>'+
+        '<button data-add="tab" class="ed-tbtn">탭</button>'+
+        '<button data-add="box" class="ed-tbtn">색상박스</button>'+
+        '<button data-add="line" class="ed-tbtn">선</button>'+
+        '<button data-add="carousel" class="ed-tbtn">슬라이드</button>'+
+        '<button data-add="form" class="ed-tbtn">문의폼</button>'+
+        '<button data-addslide class="ed-tbtn">페이지</button>'+
         '<button id="edGuideBtn" class="ed-tbtn ed-tbtn-toggle" type="button" title="정렬 가이드선 표시">⊹ 가이드</button>'+
-        '<button id="edGVBtn" class="ed-tbtn" type="button" title="세로 가이드 추가 (드래그로 이동, 더블클릭 삭제)">│＋</button>'+
-        '<button id="edGHBtn" class="ed-tbtn" type="button" title="가로 가이드 추가 (드래그로 이동, 더블클릭 삭제)">─＋</button>'+
+        '<button id="edGVBtn" class="ed-tbtn" type="button" title="세로 가이드 추가 (드래그로 이동, 더블클릭 삭제)">세로선</button>'+
+        '<button id="edGHBtn" class="ed-tbtn" type="button" title="가로 가이드 추가 (드래그로 이동, 더블클릭 삭제)">가로선</button>'+
       '</div>'+
       '<div class="ed-right-top">'+
         '<button class="ed-tbtn" id="edUndo" type="button" title="되돌리기 (Ctrl+Z)" disabled>↶</button>'+

@@ -257,7 +257,7 @@
       return [
         { bg: '#0b1220', elements: [
           { type: 'box', x: 0, y: 0, w: 100, h: 100, z: 1, fillType: 'gradient', color1: '#1e3a8a', color2: '#7c3aed', gradAngle: 135, radius: 0 },
-          { type: 'text', x: 10, y: 33, w: 80, h: 16, z: 3, html: '선영디자인', size: 8, align: 'center', color: '#ffffff', fw: 800, aos: 'fade-up' },
+          { type: 'text', x: 10, y: 33, w: 80, h: 16, z: 3, html: '카달로그', size: 8, align: 'center', color: '#ffffff', fw: 800, aos: 'fade-up' },
           { type: 'text', x: 10, y: 52, w: 80, h: 8, z: 3, html: '전자카달로그 · 인터랙티브 데모', size: 2.8, align: 'center', color: '#c7d2fe', fw: 500, aos: 'fade-up', aosDelay: 150 }
         ]},
         { bg: '#ffffff', elements: [
@@ -279,7 +279,7 @@
     }
     async function seedSample(userId) {
       var d = db(), cid = uid();
-      d.catalogs.push({ id: cid, user_id: userId, title: '선영디자인 데모 카달로그', aspect: '16:9', settings: { point: '#06b6d4' }, bgm_youtube: 'JmQEkWAUG7k', bgm_autoplay: false, lang: 'ko', parent_id: null, created_at: now(), updated_at: now() });
+      d.catalogs.push({ id: cid, user_id: userId, title: '카달로그', aspect: '16:9', settings: { point: '#06b6d4' }, bgm_youtube: 'JmQEkWAUG7k', bgm_autoplay: false, lang: 'ko', parent_id: null, created_at: now(), updated_at: now() });
       sampleSlides().forEach(function (s, i) { d.slides.push({ id: uid(), catalog_id: cid, sort_order: i, bg_color: s.bg, elements: s.elements, created_at: now() }); });
       save(d);
       try { await M.addLanguage(cid, 'en'); } catch (e) {}   // 영어 버전 → 미리보기 국기 전환 시연
