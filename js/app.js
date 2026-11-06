@@ -9,22 +9,22 @@
       : '<span class="' + cls + '">' + API.langFlag(lang) + '</span>';
   }
 
-  // 버전(언어별) 카드
+  // 버전(언어별) 카드 — cms .board (훅 클래스 cx-card/cx-tag/mp-share 유지)
   function versionCard(v, isBase) {
-    return '<div class="cx-card" data-id="' + v.id + '" data-lang="' + esc(v.lang) + '">'
-      + '<div class="cx-card-head"><span class="cx-flag">' + flagImg(v.lang, 'cx-flag-img') + '</span>'
-      + '<div class="cx-card-info"><div class="cx-card-title">' + esc(API.langName(v.lang)) + (isBase ? ' <span class="cx-tag">원본</span>' : '') + '</div>'
-      + '<div class="cx-card-meta"><span>' + esc(v.title || '') + '</span></div></div></div>'
-      + '<div class="cx-actions">'
-      + '<a class="cx-btn primary" href="editor.html?id=' + v.id + '">🎨 편집</a>'
-      + '<a class="cx-btn" href="bgm.html?id=' + v.id + '">🎵 배경음악</a>'
-      + '<a class="cx-btn" href="view.html?id=' + v.id + '" target="_blank">👁 미리보기</a>'
-      + '<button class="cx-btn" data-act="share">🔗 링크복사</button>'
-      + '<button class="cx-btn" data-act="inq">✉️ 문의내역</button>'
-      + '<button class="cx-btn danger" data-act="del">' + (isBase ? '그룹 삭제' : '삭제') + '</button>'
+    return '<div class="board cx-card" data-id="' + v.id + '" data-lang="' + esc(v.lang) + '">'
+      + '<div class="bt"><div class="ic" style="background:var(--panel2)">' + flagImg(v.lang, 'cx-flag-img') + '</div>'
+      + '<div style="min-width:0"><div class="n">' + esc(API.langName(v.lang)) + (isBase ? ' <span class="pin cx-tag">원본</span>' : '') + '</div>'
+      + '<div class="id">' + esc(v.title || '') + '</div></div></div>'
+      + '<div class="act">'
+      + '<a class="btn sm pri" href="editor.html?id=' + v.id + '">편집</a>'
+      + '<a class="btn sm" href="bgm.html?id=' + v.id + '">배경음악</a>'
+      + '<a class="btn sm" href="view.html?id=' + v.id + '" target="_blank">미리보기</a>'
+      + '<button class="btn sm" data-act="share">링크복사</button>'
+      + '<button class="btn sm" data-act="inq">문의내역</button>'
+      + '<button class="btn sm dan" data-act="del">' + (isBase ? '그룹 삭제' : '삭제') + '</button>'
       + '</div>'
-      + '<input class="mp-share" readonly value="' + esc(shareUrl(v.id)) + '" onclick="this.select()"'
-      + ' style="width:100%;box-sizing:border-box;margin-top:12px;padding:8px 11px;border:1px solid var(--line);border-radius:8px;font-size:.82rem;font-family:ui-monospace,monospace;background:#f8fafc">'
+      + '<input class="mp-share inp" readonly value="' + esc(shareUrl(v.id)) + '" onclick="this.select()"'
+      + ' style="margin-top:10px;font-family:ui-monospace,monospace;font-size:12px">'
       + '</div>';
   }
 
@@ -34,15 +34,15 @@
     var addable = Object.keys(API.LANGS).filter(function (c) { return have.indexOf(c) < 0; });
     var cards = versions.map(function (v) { return versionCard(v, !v.parent_id); }).join('');
     var addForm = addable.length
-      ? '<form class="cx-add" data-root="' + base.id + '"><span class="cx-add-label">🌐 언어 추가</span>'
-        + '<select class="cx-add-sel">' + addable.map(function (c) { return '<option value="' + c + '">' + API.langFlag(c) + ' ' + esc(API.langName(c)) + '</option>'; }).join('') + '</select>'
-        + '<button class="cx-btn primary" type="submit">＋ 원본 복제해서 만들기</button></form>'
-      : '<p class="cx-alldone">✓ 모든 지원 언어가 추가되어 있습니다.</p>';
-    return '<div class="cx-group" data-root="' + base.id + '">'
-      + '<div class="cx-head"><h1 class="cx-title">' + esc(base.title) + '</h1>'
-      + '<p class="cx-sub">언어 버전을 만들고 안의 <b>글자만 바꾸면</b> 됩니다. 뷰어에는 국기로 언어 전환이 표시됩니다. '
-      + '<button class="cx-btn" data-act="rename" data-id="' + base.id + '">✏️ 이름</button></p></div>'
-      + '<div class="cx-langs" style="position:static">' + cards + '</div>'
+      ? '<form class="cx-add card" data-root="' + base.id + '" style="margin-top:12px"><div class="card-b" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b>🌐 언어 추가</b>'
+        + '<select class="cx-add-sel sel" style="width:auto">' + addable.map(function (c) { return '<option value="' + c + '">' + API.langFlag(c) + ' ' + esc(API.langName(c)) + '</option>'; }).join('') + '</select>'
+        + '<button class="btn pri" type="submit">＋ 원본 복제해서 만들기</button></div></form>'
+      : '<p class="sub" style="margin-top:12px">✓ 모든 지원 언어가 추가되어 있어요.</p>';
+    return '<div class="cx-group" data-root="' + base.id + '" style="margin-bottom:24px">'
+      + '<div class="head"><div><h1 class="h1 cx-title">' + esc(base.title) + '</h1>'
+      + '<p class="sub">언어 버전을 만들고 안의 <b>글자만 바꾸면</b> 됩니다. 뷰어에는 국기로 언어 전환이 표시돼요.</p></div>'
+      + '<div class="sp"></div><button class="btn sm" data-act="rename" data-id="' + base.id + '">✏️ 이름</button></div>'
+      + '<div class="boards cx-langs">' + cards + '</div>'
       + addForm + '</div>';
   }
 
@@ -50,16 +50,16 @@
   async function render() {
     var all = await API.allMyCatalogs();
     var bases = all.filter(function (c) { return !c.parent_id; });
-    var head = '<div class="cx-topbar"><h1 class="cx-title" style="margin:0">카달로그</h1>'
-      + '<button class="btn-primary" id="newBtn">＋ 새 카달로그</button></div>';
+    var head = '<div class="head"><div><h1 class="h1">카달로그</h1><p class="sub">만들고 편집한 뒤 미리보기 링크를 공유하세요.</p></div>'
+      + '<div class="sp"></div><button class="btn pri" id="newBtn">＋ 새 카달로그</button></div>';
     if (!bases.length) {
-      ac.innerHTML = head + '<div class="cx-card" style="text-align:center;padding:44px"><div style="font-size:2.4rem;margin-bottom:8px">📖</div><p class="muted">아직 카달로그가 없습니다. <b>＋ 새 카달로그</b>로 시작하세요.</p></div>';
+      ac.innerHTML = head + '<div class="card"><div class="card-b" style="text-align:center;padding:48px 20px"><div style="font-size:40px">📖</div><h2 style="margin:10px 0 4px;font-size:18px">아직 카달로그가 없어요</h2><p class="sub">＋ 새 카달로그로 시작하세요.</p></div></div>';
     } else {
       var groups = bases.map(function (b) {
         var versions = all.filter(function (c) { return c.id === b.id || c.parent_id === b.id; })
           .sort(function (a, z) { if (!a.parent_id) return -1; if (!z.parent_id) return 1; return (a.created_at || '') < (z.created_at || '') ? -1 : 1; });
         return group(b, versions);
-      }).join('<hr class="cx-div">');
+      }).join('');
       ac.innerHTML = head + '<div class="cx-groups">' + groups + '</div>';
     }
     document.getElementById('newBtn').addEventListener('click', newCatalog);

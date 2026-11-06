@@ -203,3 +203,113 @@ body.cv-body { background:#ffffff; font-family:-apple-system,"Apple SD Gothic Ne
 .cv-el .el-submit:hover { filter:brightness(1.08); }
 .cv-el .el-submit:disabled { opacity:.6; cursor:default; }
 .cv-el .ef-hp { position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
+
+/* ===== 캐러셀 슬라이드별 내용(타이틀·서브·내용·색상박스) ===== */
+.cr-wrap[data-cp] { position:relative; }
+.cr-wrap[data-cp="right"] { flex-direction:row; gap:2%; }
+.cr-wrap[data-cp="left"] { flex-direction:row-reverse; gap:2%; }
+.cr-main { flex:1; min-width:0; min-height:0; display:flex; flex-direction:column; gap:6px; }
+.cr-content { display:grid; flex:0 0 auto; min-width:0; min-height:0; overflow:hidden; text-align:var(--cpal,left); background:var(--cpbg,transparent); border-radius:.6cqw; }
+.cr-wrap[data-cp="right"] .cr-content,.cr-wrap[data-cp="left"] .cr-content { flex:0 0 var(--cpsz,40%); max-width:var(--cpsz,40%); align-content:center; padding:.6cqw; }
+.cr-wrap[data-cp="bottom"] .cr-content { max-height:var(--cpsz,40%); padding:.4cqw .6cqw; }
+.cr-wrap[data-cp="over"] .cr-content { position:absolute; left:0; right:0; bottom:0; max-height:var(--cpsz,40%); z-index:5; padding:1.2cqw; pointer-events:none; }
+.cr-pane { grid-area:1/1; min-width:0; opacity:0; visibility:hidden; transition:opacity .3s ease; display:flex; flex-direction:column; gap:.5cqw; }
+.cr-pane.on { opacity:1; visibility:visible; }
+.cr-title { font-size:var(--cpts); color:var(--cptc); font-weight:700; line-height:1.25; word-break:keep-all; }
+.cr-sub { font-size:var(--cpss); color:var(--cpsc); font-weight:500; line-height:1.35; word-break:keep-all; }
+.cr-body-txt { font-size:var(--cpbs); color:var(--cpbc); line-height:1.55; white-space:pre-line; word-break:keep-all; }
+.cr-cboxes { display:grid; grid-template-columns:repeat(var(--cpcols,2),minmax(0,1fr)); gap:.7cqw; margin-top:.3cqw; }
+.cr-cbox { padding:.8cqw 1cqw; border-radius:.6cqw; font-size:var(--cpxs); line-height:1.45; text-align:left; word-break:keep-all; min-width:0; }
+.cr-cbox-t { font-weight:700; }
+.cr-cbox-d { white-space:pre-line; }
+
+/* 캐러셀 네비 버튼 — 크기·화살표·그림자 사용자 지정, 측면 여백(그림자 잘림 방지) */
+.cv-el .cr-nav { width:var(--navsz,38px); height:var(--navsz,38px); font-size:var(--navar,22px); box-shadow:var(--navsh,none); }
+.cv-el .cr-wrap[data-navpos="mid"] .cr-stage { gap:12px; padding:0 var(--navpad,12px); }
+.cv-el .el-swiper .swiper-slide img { box-shadow:var(--imgsh,0 8px 22px rgba(0,0,0,.22)); }
+
+/* ===== 2차: 이미지 크기 고정 / 박스 크기 / 글꼴 ===== */
+.cv-el .cr-wrap[data-sized] .cr-stage { justify-content:center; }
+.cv-el .cr-wrap[data-sized] .cr-stage .el-swiper { flex:0 1 var(--crsw,100%); width:var(--crsw,100%); height:var(--crh); padding:1.5cqw 0; box-sizing:content-box; }
+.cv-el .cr-wrap[data-sized] .el-swiper .swiper-slide { width:var(--crw); height:var(--crh); }
+.cv-el .cr-wrap[data-sized] .el-swiper .swiper-slide img { width:100%; height:100%; max-width:none; max-height:none; object-fit:var(--crfit,contain); }
+.cr-title { font-family:var(--cptf,inherit); }
+.cr-sub { font-family:var(--cpsf,inherit); }
+.cr-body-txt { font-family:var(--cpbf,inherit); }
+.cr-cboxes { display:flex; flex-wrap:wrap; justify-content:var(--cpjc,flex-start); }
+.cr-cbox { flex:0 0 calc((100% - .7cqw * (var(--cpcols,2) - 1)) / var(--cpcols,2)); font-family:var(--cpxf,inherit); box-sizing:border-box; }
+.cr-cbox-t { font-size:var(--cpxts,inherit); }
+
+/* ===== 카달로그 영역: 어떤 창 비율에서도 찌그러지지 않게 폭·높이 중 작은 쪽에 맞춤 ===== */
+.cv-mid { container-type:size; --navw:200px; }
+.cv-stage-wrap { height:auto; }
+.cv-stage { height:auto; max-height:none; max-width:none; width:min(calc(100cqw - var(--navw)), calc(100cqh * var(--asp,1.7778))); }
+#cv.cv-mobile .cv-mid { --navw:140px; }
+@media (max-width:760px) and (orientation:portrait){ .cv-mid { --navw:180px; } }
+
+/* ===== 전체보기: 슬라이드 영역만 표시 (Esc로 종료) ===== */
+#cv.cv-fs .cv-mid { --navw:0px; }
+#cv:fullscreen .cv-mid { --navw:0px; }
+#cv:-webkit-full-screen .cv-mid { --navw:0px; }
+#cv.cv-fs .cv-top,#cv.cv-fs .cv-bottom,#cv.cv-fs .cv-langs,#cv.cv-fs .cv-nav { display:none; }
+#cv:fullscreen .cv-top,#cv:fullscreen .cv-bottom,#cv:fullscreen .cv-langs,#cv:fullscreen .cv-nav { display:none; }
+#cv:-webkit-full-screen .cv-top,#cv:-webkit-full-screen .cv-bottom,#cv:-webkit-full-screen .cv-langs,#cv:-webkit-full-screen .cv-nav { display:none; }
+#cv.cv-fs .cv-stage { cursor:grab; user-select:none; -webkit-user-select:none; }
+#cv.cv-fs .cv-stage.cv-dragging { cursor:grabbing; }
+.cv-el .cr-wrap[data-sized] .cr-stage { overflow:hidden; }
+
+/* 터치 기기 전체보기: Esc가 없으므로 종료 버튼만 남김 */
+#cv.cv-mobile.cv-fs .cv-top { display:flex; position:fixed; top:10px; right:10px; bottom:auto; left:auto; z-index:40; }
+#cv.cv-mobile.cv-fs .cv-top .cv-play,#cv.cv-mobile.cv-fs .cv-top .cv-bgm { display:none; }
+#cv.cv-mobile.cv-fs .cv-top .cv-full { opacity:.75; }
+.cr-title,.cr-sub,.cr-cbox-t { white-space:pre-line; }
+.cr-title { font-weight:var(--cptw,700); }
+.cr-sub { font-weight:var(--cpsw,500); }
+.cr-body-txt { font-weight:var(--cpbw,400); }
+.cr-cbox-t { font-weight:var(--cpxtw,700); }
+.cr-cbox-d { font-weight:var(--cpxw,400); }
+.cv-el .el-form .ef-inp { border:var(--efinbd,1px solid #d1d5db); }
+
+/* ===== AI 채팅 ===== */
+.el-chat { width:100%; height:100%; box-sizing:border-box; display:flex; flex-direction:column; gap:1.2cqw; padding:2.2cqw 2.4cqw 1.8cqw; background:var(--chbg); border-radius:var(--chrad); font-size:var(--chfs); color:var(--chaic); overflow:hidden; }
+.ch-head { flex:0 0 auto; display:flex; align-items:center; gap:1.4cqw; padding-bottom:1.2cqw; border-bottom:1.5px solid var(--chline); }
+.ch-logo { width:5.5cqw; height:5.5cqw; flex:0 0 auto; border-radius:50%; object-fit:cover; }
+.ch-ht { min-width:0; }
+.ch-title { font-size:var(--chts); font-weight:800; color:var(--chtc); line-height:1.2; }
+.ch-sub { color:var(--chsc); font-size:.95em; margin-top:.2cqw; }
+.ch-body { flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:1.4cqw; padding:.4cqw .2cqw 1cqw; }
+.ch-msg { display:flex; }
+.ch-msg.user { justify-content:flex-end; }
+.ch-bub { max-width:75%; padding:.9cqw 1.6cqw; border-radius:var(--chbr); line-height:1.45; white-space:pre-line; overflow-wrap:anywhere; }
+.ch-msg.ai .ch-bub { background:var(--chaibg); color:var(--chaic); border-bottom-left-radius:4px; }
+.ch-msg.user .ch-bub { background:var(--chubg); color:var(--chuc); border-bottom-right-radius:4px; }
+.ch-msg.typing .ch-bub { opacity:.6; animation:chdots 1s ease-in-out infinite; }
+@keyframes chdots { 50% { opacity:.25; } }
+.ch-form { flex:0 0 auto; display:flex; align-items:center; gap:.8cqw; background:var(--chinbg); border:1.5px solid var(--chinbd); border-radius:999px; padding:.5cqw .8cqw .5cqw 1.8cqw; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+.ch-inp { flex:1; min-width:0; border:0; outline:0; background:transparent; font:inherit; color:#333; padding:.5cqw 0; }
+.ch-send { flex:0 0 auto; width:3.4cqw; height:3.4cqw; border:0; background:none; color:var(--chsend); cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center; }
+.ch-send svg { width:85%; height:85%; }
+.ch-send:disabled { opacity:.4; cursor:default; }
+
+/* ===== 모바일 대응 (2026-11-06) ===== */
+/* 모바일 브라우저의 글자 자동 확대(안드로이드 글꼴 부스팅·아이폰 가로 확대) 끔 → PC와 같은 줄바꿈·위치 */
+html, body.cv-body, #cv { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+.cv-el .el-text, .cv-el .el-tab, .cv-el .cr-content { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+/* 슬라이드 버튼·여백을 카달로그 크기에 비례(화면이 작아지면 함께 작아짐). 직접 지정한 크기는 그대로 */
+.cv-el .cr-nav { width:var(--navsz,clamp(18px,4.2cqw,38px)); height:var(--navsz,clamp(18px,4.2cqw,38px)); font-size:var(--navar,clamp(12px,2.4cqw,22px)); }
+.cv-el .cr-wrap[data-navpos="mid"] .cr-stage { gap:clamp(4px,1.3cqw,12px); padding:0 var(--navpad,clamp(4px,1.3cqw,12px)); }
+.cv-el .cr-head { gap:clamp(16px,5cqw,48px); }
+.cv-el .cr-bar { gap:clamp(6px,1.5cqw,14px); }
+/* 모바일: 페이지네이션(슬라이드 점·하단 점) 숨김 */
+#cv.cv-mobile .cv-el .swiper-pagination, #cv.cv-mobile .cv-dots { display:none; }
+/* 화면 높이가 낮을 때(휴대폰 가로 등): 재생·전체보기·음악은 카달로그 오른쪽 옆, 언어는 왼쪽 옆 */
+@media (max-height:600px){
+  #cv.cv-mobile .cv-mid, #cv:not(.cv-mobile) .cv-mid { padding:12px 0 38px; }
+  #cv.cv-mobile .cv-top, #cv:not(.cv-mobile) .cv-top { top:0; bottom:auto; left:calc(100% + 12px); right:auto; flex-direction:column; gap:8px; }
+  #cv.cv-mobile .cv-langs, #cv:not(.cv-mobile) .cv-langs { top:0; bottom:auto; right:calc(100% + 12px); left:auto; }
+  #cv.cv-mobile .cv-lang-menu, #cv:not(.cv-mobile) .cv-lang-menu { left:auto; right:0; }
+  #cv.cv-mobile .cv-cbtn, #cv:not(.cv-mobile) .cv-cbtn { width:36px; height:36px; }
+  #cv.cv-mobile .cv-bottom, #cv:not(.cv-mobile) .cv-bottom { bottom:8px; gap:10px; }
+}
+/* 위 배치는 전체보기 중엔 적용 안 함(전체보기 규칙 우선) */
+#cv.cv-fs .cv-mid, #cv:fullscreen .cv-mid { padding:2.5vh 2vw; }

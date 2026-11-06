@@ -2,12 +2,13 @@
 (function () {
   var ac, cur = '#1a1a1a';
   function render(msg) {
-    ac.innerHTML = '<section class="card" style="max-width:520px"><div class="card-head"><h2>환경설정</h2></div>'
-      + (msg ? '<p class="flash">' + msg + '</p>' : '')
-      + '<div class="form-grid">'
-      + '<label>포인트 컬러 <input type="color" id="pc" value="' + cur + '" style="width:64px;height:40px;padding:2px"></label>'
-      + '<p class="muted sm">미리보기·카달로그의 <b>네비게이션 버튼 · 페이지 번호 · 재생 버튼</b> 배경색이 이 색으로 통일됩니다. (내 모든 카달로그에 적용)</p>'
-      + '<div><button class="btn-primary" id="save">저장</button></div></div></section>';
+    ac.innerHTML = '<div class="head"><div><h1 class="h1">환경설정</h1><p class="sub">미리보기·카달로그의 포인트 컬러를 설정합니다.</p></div></div>'
+      + (msg ? '<div class="flash-box" style="margin-bottom:16px">' + msg + '</div>' : '')
+      + '<div class="card" style="max-width:520px"><div class="card-h">포인트 컬러</div><div class="card-b">'
+      + '<div class="field"><label>포인트 컬러</label>'
+      + '<input type="color" id="pc" value="' + cur + '" style="width:64px;height:40px;padding:2px;border:1px solid var(--line2);border-radius:8px;background:var(--panel)">'
+      + '<p class="hint">미리보기·카달로그의 <b>네비게이션 버튼 · 페이지 번호 · 재생 버튼</b> 배경색이 이 색으로 통일됩니다. (내 모든 카달로그에 적용)</p></div>'
+      + '</div><div class="card-f"><button class="btn pri" id="save">저장</button></div></div>';
     document.getElementById('save').addEventListener('click', save);
   }
   async function save() {

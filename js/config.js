@@ -10,6 +10,12 @@ window.DEMO_CONFIG = {
   // 이미지/영상 업로드 버킷 이름 (supabase_setup.sql 에서 생성)
   STORAGE_BUCKET: 'catalog-media',
 
+  // AI 채팅(Gemini) — Supabase Edge Function 'catalog-chat' 배포 후 켜기. API 키는 여기 넣지 말고 Supabase 비밀값(GEMINI_API_KEY)에만.
+  AI_CHAT: {
+    ENABLED: true,
+    FUNCTION: 'catalog-chat'
+  },
+
   // 문의폼 이메일 발송 (EmailJS). 안 쓰면 그대로 두면 DB에만 저장됨.
   // https://www.emailjs.com → Email Services / Templates 에서 발급
   EMAILJS: {

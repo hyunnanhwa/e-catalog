@@ -106,3 +106,4 @@ create policy media_delete on storage.objects for delete to authenticated
   using (bucket_id = 'catalog-media' and (storage.foldername(name))[1] = auth.uid()::text);
 
 -- 완료. (updated_at 자동 갱신은 앱(JS)에서 처리)
+-- AI 채팅을 쓰려면 이어서 supabase_chat.sql 도 실행하세요.

@@ -9,25 +9,26 @@
 
   function picker() {
     if (cats.length <= 1) return '';
-    return '<div class="bk-pick"><label class="muted sm">대상 카달로그 &nbsp;'
-      + '<select id="bkSel">' + cats.map(function (c) { return '<option value="' + c.id + '"' + (c.id === curId ? ' selected' : '') + '>' + esc(label(c)) + '</option>'; }).join('') + '</select></label></div>';
+    return '<div class="toolbar"><label class="muted" style="display:flex;align-items:center;gap:8px">대상 카달로그'
+      + '<select class="sel" id="bkSel" style="width:auto">' + cats.map(function (c) { return '<option value="' + c.id + '"' + (c.id === curId ? ' selected' : '') + '>' + esc(label(c)) + '</option>'; }).join('') + '</select></label></div>';
   }
 
   async function renderList() {
     var host = document.getElementById('bkList');
-    host.innerHTML = '<p class="muted">불러오는 중…</p>';
+    host.innerHTML = '<div class="empty">불러오는 중…</div>';
     try {
       var bks = await API.listBackups(curId);
-      if (!bks.length) { host.innerHTML = '<div class="bk-empty"><div class="se-ico">🗂️</div><p>아직 백업이 없습니다. 편집 후 저장하면 자동으로 쌓입니다.</p></div>'; return; }
-      host.innerHTML = '<ul class="bk-list">' + bks.map(function (b, i) {
-        var restore = b.reason === 'restore';
-        return '<li class="bk-item">'
-          + '<span class="sub-badge ' + (restore ? 'off' : 'ok') + '">' + (restore ? '복원 직전' : '저장 직전') + '</span>'
-          + '<span class="bk-when">' + esc(fmt(b.created_at)) + (i === 0 ? ' <span class="muted sm">· 최신</span>' : '') + '</span>'
-          + '<span class="bk-meta">페이지 ' + (b.slide_count | 0) + '개</span>'
-          + '<span class="bk-acts"><button class="btn-xs bk-restore" data-id="' + b.id + '" style="border-color:#93c5fd;color:#1d4ed8">되돌리기</button>'
-          + '<button class="btn-xs danger bk-del" data-id="' + b.id + '">삭제</button></span></li>';
-      }).join('') + '</ul>';
+      if (!bks.length) { host.innerHTML = '<div class="empty">아직 백업이 없어요. 편집 후 저장하면 자동으로 쌓입니다.</div>'; return; }
+      host.innerHTML = '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>구분</th><th>시각</th><th class="num">페이지</th><th style="width:1%"></th></tr></thead><tbody>'
+        + bks.map(function (b, i) {
+          var restore = b.reason === 'restore';
+          return '<tr><td><span class="badge b-' + (restore ? 'read' : 'done') + '">' + (restore ? '복원 직전' : '저장 직전') + '</span></td>'
+            + '<td class="title">' + esc(fmt(b.created_at)) + (i === 0 ? ' <span class="faint" style="font-weight:400">· 최신</span>' : '') + '</td>'
+            + '<td class="num">' + (b.slide_count | 0) + '</td>'
+            + '<td class="num"><div style="display:flex;gap:6px;justify-content:flex-end">'
+            + '<button class="btn sm bk-restore" data-id="' + b.id + '">되돌리기</button>'
+            + '<button class="btn sm dan bk-del" data-id="' + b.id + '">삭제</button></div></td></tr>';
+        }).join('') + '</tbody></table></div>';
       host.querySelectorAll('.bk-restore').forEach(function (btn) {
         btn.addEventListener('click', async function () {
           if (!confirm('이 시점으로 되돌릴까요?\n현재 편집 내용은 백업된 뒤 교체됩니다.')) return;
@@ -48,10 +49,10 @@
   }
 
   function render() {
-    ac.innerHTML = '<section class="card bk-card"><div class="sub-head"><div>'
-      + '<h2 class="sub-h2">편집 백업 <span class="muted sm">최근 10개 자동 보관</span></h2>'
-      + '<p class="muted sm">저장할 때마다 <b>직전 상태</b>가 자동 백업돼요. 잘못 고쳤을 때 원하는 시점으로 되돌리세요.</p></div></div>'
-      + picker() + '<div id="bkList"></div></section>';
+    ac.innerHTML = '<div class="head"><div><h1 class="h1">편집 백업</h1>'
+      + '<p class="sub">저장할 때마다 <b>직전 상태</b>가 자동 백업돼요(최근 10개). 잘못 고쳤을 때 원하는 시점으로 되돌리세요.</p></div></div>'
+      + '<div class="card"><div class="card-h">백업 목록 <span class="note">최근 10개 자동 보관</span></div>'
+      + picker() + '<div id="bkList"></div></div>';
     var sel = document.getElementById('bkSel');
     if (sel) sel.addEventListener('change', function () { curId = sel.value; renderList(); });
     renderList();
@@ -63,7 +64,7 @@
     ac.innerHTML = '<div class="card"><p class="muted">불러오는 중…</p></div>';
     try {
       cats = await API.allMyCatalogs();
-      if (!cats.length) { ac.innerHTML = '<section class="card"><div class="sub-empty"><div class="se-ico">🗂️</div><p class="muted">카달로그가 없습니다. 먼저 카달로그를 만들어 주세요.</p></div></section>'; return; }
+      if (!cats.length) { ac.innerHTML = '<div class="head"><div><h1 class="h1">편집 백업</h1></div></div><div class="card"><div class="empty">카달로그가 없어요. 먼저 카달로그를 만들어 주세요.</div></div>'; return; }
       curId = cats[0].id;
       render();
     } catch (e) { ac.innerHTML = '<div class="card"><p class="err">' + (e.message || e) + '</p></div>'; }

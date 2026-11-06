@@ -70,6 +70,8 @@
         radius: st.radius == null ? 10 : st.radius,
         token: cat.id, formUrl: 'sb:form', langs: langs, curLang: cat.lang || 'ko', preview: false
       };
+      // AI 채팅: Supabase Edge Function 주소(데모 모드·미설정이면 비워 둠 → 채팅창은 안내문 표시)
+      if (!API.__demo && cfg.AI_CHAT && cfg.AI_CHAT.ENABLED) boot.chatUrl = cfg.SUPABASE_URL.replace(/\/$/, '') + '/functions/v1/' + (cfg.AI_CHAT.FUNCTION || 'catalog-chat');
       var tag = document.createElement('script'); tag.type = 'application/json'; tag.id = 'cv-boot';
       tag.textContent = JSON.stringify(boot); document.body.appendChild(tag);
       // EmailJS SDK(옵션)

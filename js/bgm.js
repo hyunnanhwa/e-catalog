@@ -14,23 +14,22 @@
     var cur = cat.bgm_youtube || '', inList = listIds.indexOf(cur) >= 0, curCustom = (cur && !inList) ? cur : '';
     var curValid = inList ? cur : (curCustom || '');
     var picker = cats.length > 1
-      ? '<div style="margin-bottom:14px"><label class="muted sm">카달로그 </label><select id="bgmCat">' + cats.map(function (c) { return '<option value="' + c.id + '"' + (c.id === cat.id ? ' selected' : '') + '>' + esc(c.title) + '</option>'; }).join('') + '</select></div>'
+      ? '<label class="muted" style="display:flex;align-items:center;gap:8px">카달로그 <select id="bgmCat" class="sel" style="width:auto">' + cats.map(function (c) { return '<option value="' + c.id + '"' + (c.id === cat.id ? ' selected' : '') + '>' + esc(c.title) + '</option>'; }).join('') + '</select></label>'
       : '';
-    var tracks = '<label class="bgm-track"><input type="radio" name="bgm_id" value="" data-yt="" ' + (cur === '' ? 'checked' : '') + '><span class="bgm-name">배경음악 없음</span></label>'
-      + TRACKS.map(function (t) { return '<label class="bgm-track"><input type="radio" name="bgm_id" value="' + t[0] + '" data-yt="' + t[0] + '" ' + (cur === t[0] ? 'checked' : '') + '><span class="bgm-name">' + esc(t[1]) + '</span></label>'; }).join('')
-      + '<label class="bgm-track bgm-custom-row"><input type="radio" name="bgm_id" id="bgmCustomRadio" value="__custom__" ' + (curCustom ? 'checked' : '') + '><span class="bgm-name">직접 입력 (유튜브 링크)</span></label>'
-      + '<input type="text" id="bgmCustomUrl" class="bgm-custom-input" placeholder="https://www.youtube.com/watch?v=..." value="' + (curCustom ? 'https://youtu.be/' + esc(curCustom) : '') + '">';
+    var tracks = '<label class="check"><input type="radio" name="bgm_id" value="" data-yt="" ' + (cur === '' ? 'checked' : '') + '> 배경음악 없음</label>'
+      + TRACKS.map(function (t) { return '<label class="check"><input type="radio" name="bgm_id" value="' + t[0] + '" data-yt="' + t[0] + '" ' + (cur === t[0] ? 'checked' : '') + '> ' + esc(t[1]) + '</label>'; }).join('')
+      + '<label class="check" style="border-top:1px solid var(--line);margin-top:6px;padding-top:12px"><input type="radio" name="bgm_id" id="bgmCustomRadio" value="__custom__" ' + (curCustom ? 'checked' : '') + '> 직접 입력 (유튜브 링크)</label>'
+      + '<input type="text" id="bgmCustomUrl" class="inp" style="margin:6px 0 10px" placeholder="https://www.youtube.com/watch?v=..." value="' + (curCustom ? 'https://youtu.be/' + esc(curCustom) : '') + '">';
 
-    ac.innerHTML = picker + '<div class="bgm-page">'
-      + '<section class="card"><div class="card-head"><h2>미리보기</h2><a class="btn-sm ghost" href="app.html">← 카달로그</a></div>'
-      + '<div class="bgm-preview-frame"><iframe id="bgmPrevCat" src="view.html?id=' + cat.id + '&_=' + Date.now() + '" title="미리보기" loading="lazy"></iframe></div></section>'
-      + '<section class="card bgm-select"><div class="card-head"><h2>🎵 배경음악</h2></div>'
-      + '<p class="muted sm">빠른 선택 음원에서 고르거나, 유튜브 링크를 직접 붙여넣으세요.</p>'
-      + '<form class="bgm-form" id="bgmForm">' + tracks
-      + '<div class="bgm-ytprev" id="bgmPrev" style="' + (curValid ? '' : 'display:none') + '"><div class="muted sm">미리듣기</div>'
-      + '<iframe id="bgmPrevFrame" width="100%" height="180" src="' + (curValid ? 'https://www.youtube.com/embed/' + esc(curValid) : '') + '" title="미리듣기" frameborder="0" allow="autoplay; encrypted-media"></iframe></div>'
-      + '<label class="bgm-auto"><input type="checkbox" id="bgmAuto" ' + (cat.bgm_autoplay ? 'checked' : '') + '> 카달로그 열릴 때 자동 재생</label>'
-      + '<button type="submit" class="btn-primary">저장</button></form></section></div>';
+    ac.innerHTML = '<div class="head"><div><h1 class="h1">배경음악</h1><p class="sub">빠른 선택 음원에서 고르거나, 원하는 유튜브 링크를 직접 붙여넣으세요.</p></div><div class="sp"></div>' + picker + '<a class="btn sm" href="app.html">← 카달로그</a></div>'
+      + '<div class="grid2">'
+      + '<div class="card"><div class="card-h">미리보기</div><div class="card-b"><div style="aspect-ratio:16/9;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel2)"><iframe id="bgmPrevCat" src="view.html?id=' + cat.id + '&_=' + Date.now() + '" title="미리보기" loading="lazy" style="width:100%;height:100%;border:0;display:block"></iframe></div></div></div>'
+      + '<div class="card"><div class="card-h">🎵 배경음악</div>'
+      + '<form class="card-b" id="bgmForm">' + tracks
+      + '<div id="bgmPrev" style="' + (curValid ? '' : 'display:none') + ';margin-bottom:12px"><div class="hint" style="margin-bottom:4px">미리듣기</div>'
+      + '<iframe id="bgmPrevFrame" width="100%" height="160" src="' + (curValid ? 'https://www.youtube.com/embed/' + esc(curValid) : '') + '" title="미리듣기" frameborder="0" allow="autoplay; encrypted-media" style="border-radius:8px;border:1px solid var(--line)"></iframe></div>'
+      + '<label class="check" style="margin:4px 0 14px"><input type="checkbox" id="bgmAuto" ' + (cat.bgm_autoplay ? 'checked' : '') + '> 카달로그 열릴 때 자동 재생</label>'
+      + '<button type="submit" class="btn pri" style="width:100%">저장</button></form></div></div>';
 
     if (cats.length > 1) document.getElementById('bgmCat').addEventListener('change', function (e) { location.href = 'bgm.html?id=' + e.target.value; });
 

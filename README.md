@@ -86,3 +86,26 @@ EMAILJS: { ENABLED:true, PUBLIC_KEY:'...', SERVICE_ID:'...', TEMPLATE_ID:'...' }
 - **편집 백업**: 저장할 때마다 직전 상태가 자동 백업(카달로그당 최근 30개). 편집 백업 페이지에서 되돌리기.
   ※ 이 기능을 쓰려면 `supabase_setup.sql`을 **다시 실행**하거나, 파일 안 `catalog_backups` 블록만 SQL Editor에서 실행하세요. (기존 테이블은 `if not exists`라 안전)
 - PDF 인쇄·자동 AI번역은 데모에서 제외(원본 프로젝트 기능).
+
+## AI 채팅 (Gemini) 켜기
+
+카달로그의 [AI 채팅] 요소가 실제로 답하려면 Supabase Edge Function 하나가 필요합니다. Gemini API 키는 **브라우저 코드(config.js)에 넣지 않고** Supabase 비밀값에만 저장합니다.
+
+1. **DB 설정** — Supabase SQL Editor에서 `supabase_chat.sql` 전체 실행 (대화 기록 표 + 비공개 'AI 참고 정보' 표 + 권한).
+2. **Gemini 키** — https://aistudio.google.com 에서 API 키 발급.
+3. **함수 배포** — 이 폴더에서 Supabase CLI로:
+   ```bash
+   supabase login
+   supabase link --project-ref <프로젝트 ref>
+   supabase secrets set GEMINI_API_KEY=<발급받은 키>
+   supabase secrets set ALLOWED_ORIGIN=https://<계정>.github.io     # (선택) 이 사이트에서만 호출 허용
+   supabase functions deploy catalog-chat --no-verify-jwt
+   ```
+   `--no-verify-jwt`: 로그인하지 않은 방문자도 채팅해야 하므로 끔. 대신 함수 안에서 질문 300자·대화당 40회·IP 시간당 60회·카달로그 하루 1000회로 제한.
+4. **config.js** — `AI_CHAT.ENABLED: true` (기본값). 끄려면 false.
+
+- 모델 변경: `supabase secrets set GEMINI_MODEL=<모델 이름>` (기본 gemini-2.5-flash).
+- 답변 근거: 카달로그에 적힌 글 + 채팅 요소의 'AI 참고 정보'. 참고 정보는 공개 조회되지 않는 `chat_private` 표에 따로 저장됩니다.
+- 대화 기록: 관리자 › AI 채팅 (열람 전용).
+- 데모 모드(Supabase 미설정)에서는 채팅창에 안내문만 표시됩니다.
+

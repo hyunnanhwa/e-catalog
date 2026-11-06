@@ -121,11 +121,13 @@
       // 1) 카달로그 레벨(aspect, settings)
       await API.updateCatalog(catalogId, { aspect: payload.aspect || '16:9', settings: payload.settings || {} });
       // 2) 슬라이드 반영
-      var idMap = {}, keepIds = [];
+      var idMap = {}, keepIds = [], chatInfo = {};
       var order = 0;
       for (var i = 0; i < payload.slides.length; i++) {
         var s = payload.slides[i];
-        var row = { catalog_id: catalogId, sort_order: order++, bg_color: s.bg || null, elements: s.elements || [] };
+        // AI 채팅의 '참고 정보'는 공개 조회되는 슬라이드에서 빼서 비공개 표(chat_private)에 저장
+        var els = (s.elements || []).map(function (e) { if (e && e.type === 'chat') { var c = Object.assign({}, e); chatInfo[c.id] = c.info || ''; delete c.info; return c; } return e; });
+        var row = { catalog_id: catalogId, sort_order: order++, bg_color: s.bg || null, elements: els };
         if (s.id && typeof s.id === 'string' && s.id.length > 10) {
           var { error: e1 } = await sb.from('slides').update(row).eq('id', s.id);
           if (e1) throw e1; keepIds.push(s.id);
@@ -140,8 +142,40 @@
       for (var j = 0; j < existing.length; j++) {
         if (keepIds.indexOf(existing[j].id) < 0) await sb.from('slides').delete().eq('id', existing[j].id);
       }
+      await API._saveChatPrivate(catalogId, chatInfo);
       return { ok: true, idMap: idMap, slideIds: keepIds };
     },
+
+    // ── AI 채팅: 비공개 참고 정보 + 대화 기록(열람·삭제) ──
+    async _saveChatPrivate(catalogId, chatInfo) {
+      var ids = Object.keys(chatInfo);
+      if (ids.length) {
+        var { error } = await sb.from('chat_private').upsert(ids.map(function (k) { return { catalog_id: catalogId, el_id: k, info: chatInfo[k], updated_at: new Date().toISOString() }; }));
+        if (error) throw error;
+      }
+      var { data } = await sb.from('chat_private').select('el_id').eq('catalog_id', catalogId);
+      for (var i = 0; i < (data || []).length; i++) if (ids.indexOf(data[i].el_id) < 0) await sb.from('chat_private').delete().eq('catalog_id', catalogId).eq('el_id', data[i].el_id);
+    },
+    async getChatPrivate(catalogId) {
+      var { data, error } = await sb.from('chat_private').select('el_id,info').eq('catalog_id', catalogId);
+      if (error) return {}; var m = {}; (data || []).forEach(function (r) { m[r.el_id] = r.info; }); return m;
+    },
+    async listChats(catalogIds) {
+      if (!catalogIds.length) return [];
+      var { data: ss, error } = await sb.from('chat_sessions').select('*').in('catalog_id', catalogIds).order('updated_at', { ascending: false }).limit(300);
+      if (error) throw error; ss = ss || [];
+      if (ss.length) {
+        var { data: qs } = await sb.from('chat_messages').select('session_id,content,created_at').in('session_id', ss.map(function (s) { return s.id; })).eq('role', 'user').order('created_at');
+        var first = {}; (qs || []).forEach(function (q) { if (!first[q.session_id]) first[q.session_id] = q.content; });
+        ss.forEach(function (s) { s.first_q = first[s.id] || ''; });
+      }
+      return ss;
+    },
+    async chatMessages(sessionId) {
+      var { data, error } = await sb.from('chat_messages').select('role,content,created_at').eq('session_id', sessionId).order('created_at');
+      if (error) throw error; return data || [];
+    },
+    async deleteChat(sessionId) { var { error } = await sb.from('chat_sessions').delete().eq('id', sessionId); if (error) throw error; },
 
     // ── 업로드(media_upload 대체): Supabase Storage ──
     async uploadFile(file) {
@@ -376,6 +410,7 @@
       async submitInquiry(cid, vals, elId) {
         var d = db(); d.subs.unshift({ id: uid(), catalog_id: cid, el_id: elId || null, name: vals.name || null, company: vals.company || null, phone: vals.phone || null, email: vals.email || null, message: vals.message || null, created_at: now() }); save(d);
       },
+      async getChatPrivate() { return {}; }, async listChats() { return []; }, async chatMessages() { return []; }, async deleteChat() {},
       async myInquiries(cids) { var d = db(); return d.subs.filter(function (s) { return cids.indexOf(s.catalog_id) >= 0; }).sort(function (a, b) { return a.created_at < b.created_at ? 1 : -1; }).map(clone); },
 
       // ── 환경설정(포인트 컬러) ──

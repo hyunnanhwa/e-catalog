@@ -51,7 +51,8 @@
       await API.requireUser();
       var cat = await API.getCatalog(CATALOG_ID);
       var slidesRows = await API.getSlides(CATALOG_ID);
-      var slides = slidesRows.map(function (r) { return { id: r.id, bg: r.bg_color, elements: Array.isArray(r.elements) ? r.elements : [] }; });
+      var priv = await API.getChatPrivate(CATALOG_ID);   // AI 참고 정보(비공개 표) → 채팅 요소에 합쳐 편집
+      var slides = slidesRows.map(function (r) { var els = Array.isArray(r.elements) ? r.elements : []; els.forEach(function (e) { if (e && e.type === 'chat' && priv[e.id] != null) e.info = priv[e.id]; }); return { id: r.id, bg: r.bg_color, elements: els }; });
       if (!slides.length) slides.push({ id: 0, bg: null, elements: [] });
       var st = cat.settings || {};
       var boot = {

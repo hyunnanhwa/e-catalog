@@ -11,15 +11,14 @@
     var u = await API.requireUser();
     var ac = buildShell({ active: 'tools', title: '이미지 도구', email: u.email });
     var cards = TOOLS.map(function (t) {
-      return '<a class="tool-card" href="' + t[3] + '" target="_blank" rel="noopener">'
-        + '<span class="tool-ico">' + t[0] + '</span>'
-        + '<span class="tool-name">' + esc(t[1]) + '</span>'
-        + '<span class="tool-desc">' + esc(t[2]) + '</span>'
-        + '<span class="tool-open">열기 ↗</span></a>';
+      return '<a class="board" href="' + t[3] + '" target="_blank" rel="noopener">'
+        + '<div class="bt"><div class="ic" style="font-size:20px">' + t[0] + '</div><div style="min-width:0"><div class="n">' + esc(t[1]) + '</div></div></div>'
+        + '<div class="meta" style="display:block;line-height:1.5">' + esc(t[2]) + '</div>'
+        + '<div class="act"><span class="btn sm">열기 ↗</span></div></a>';
     }).join('');
-    ac.innerHTML = '<section class="card"><div class="card-head"><h2>이미지 도구 <span class="muted sm">Re-On Dev 제공</span></h2></div>'
-      + '<p class="muted sm" style="margin-top:-4px">이미지·영상·움짤은 <b>용량 제한</b>이 있습니다. 파일이 크면 아래 무료 도구로 <b>용량을 줄이거나 변환</b>한 뒤 업로드하세요.</p>'
-      + '<div class="tool-grid">' + cards + '</div>'
-      + '<p class="muted sm" style="margin-top:16px">더 많은 도구 → <a href="https://liondev.kr" target="_blank" rel="noopener">liondev.kr</a></p></section>';
+    ac.innerHTML = '<div class="head"><div><h1 class="h1">이미지 도구</h1><p class="sub">이미지·영상·움짤은 <b>용량 제한</b>이 있어요. 파일이 크면 아래 무료 도구로 <b>용량을 줄이거나 변환</b>한 뒤 업로드하세요.</p></div>'
+      + '<div class="sp"></div><span class="badge b-info plain">Re-On Dev 제공</span></div>'
+      + '<div class="boards">' + cards + '</div>'
+      + '<p class="sub" style="margin-top:16px">더 많은 도구 → <a href="https://liondev.kr" target="_blank" rel="noopener" style="color:var(--accent);font-weight:500">liondev.kr</a></p>';
   })();
 })();

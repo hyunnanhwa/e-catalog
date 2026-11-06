@@ -2,15 +2,18 @@
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>카달로그 — 관리자</title>
-<link rel="stylesheet" href="assets/style.css">
+<script>try{var _t=localStorage.getItem('ecat-admin-theme');if(_t)document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/admin.css">
+<style>:root{--accent:#3b5bdb}</style>
 </head>
-<body class="admin bd-admin">
+<body class="cms">
 <!-- 문의내역 모달 -->
-<div id="inqModal" class="modal-back" onclick="if(event.target===this)this.style.display='none'">
+<div id="inqModal" class="modal-bg" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal">
-    <h3>문의 내역</h3>
-    <div class="inq-list" id="inqBody" style="max-height:340px;overflow:auto"></div>
-    <div class="modal-actions"><button class="btn-sm ghost" onclick="document.getElementById('inqModal').style.display='none'">닫기</button></div>
+    <div class="mh">문의 내역</div>
+    <div class="mb" id="inqBody" style="max-height:50vh"></div>
+    <div class="mf"><button class="btn" onclick="document.getElementById('inqModal').style.display='none'">닫기</button></div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

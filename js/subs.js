@@ -19,25 +19,25 @@
   }
 
   function render() {
-    var tools = rows.length ? '<button class="btn-sm" id="csvBtn">CSV 내보내기</button>' : '';
+    var tools = rows.length ? '<a class="btn sm" id="csvBtn">CSV 내보내기</a>' : '';
+    var head = '<div class="head"><div><h1 class="h1">문의내역</h1><p class="sub">메일폼으로 접수된 문의입니다. (내 모든 카달로그 합산)</p></div><div class="sp"></div>' + tools + '</div>';
+    var stats = '<div class="stats"><div class="stat card"><div class="l">전체 문의</div><div class="v">' + rows.length + '</div></div></div>';
     var body;
-    if (!rows.length) body = '<div class="sub-empty"><div class="se-ico">✉️</div><p class="muted">아직 접수된 문의가 없습니다.</p></div>';
-    else body = '<ul class="sub-list">' + rows.map(function (r) {
-      var c = []; if (r.phone) c.push('📞 ' + esc(r.phone)); if (r.email) c.push('✉️ <a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>');
-      return '<li class="sub-item"><div class="sub-main"><div class="sub-top">'
-        + '<span class="sub-name">' + esc(r.name || r.company || '(이름없음)') + '</span>'
-        + (r.company && r.name ? '<span class="sub-co">' + esc(r.company) + '</span>' : '')
-        + '<span class="sub-badge off">' + esc(titleById[r.catalog_id] || '') + '</span>'
-        + '<span class="sub-date muted">' + esc(fmt(r.created_at)) + '</span></div>'
-        + (c.length ? '<div class="sub-contacts">' + c.join('<span></span>') + '</div>' : '')
-        + (r.message ? '<div class="sub-msg">' + esc(r.message) + '</div>' : '')
-        + '</div></li>';
-    }).join('') + '</ul>';
+    if (!rows.length) body = '<div class="card"><div class="empty">아직 접수된 문의가 없어요.</div></div>';
+    else body = '<div class="card"><div class="card-h">문의 접수 <span class="note">' + rows.length + '건</span></div>'
+      + rows.map(function (r) {
+        var c = []; if (r.phone) c.push('📞 ' + esc(r.phone)); if (r.email) c.push('✉️ <a href="mailto:' + esc(r.email) + '" style="color:var(--accent)">' + esc(r.email) + '</a>');
+        return '<div class="iq" style="cursor:default"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+          + '<span class="t" style="flex:0 1 auto">' + esc(r.name || r.company || '(이름없음)') + '</span>'
+          + (r.company && r.name ? '<span class="muted" style="font-size:13px">' + esc(r.company) + '</span>' : '')
+          + '<span class="badge b-info plain">' + esc(titleById[r.catalog_id] || '') + '</span>'
+          + '<span class="muted" style="font-size:12px;margin-left:auto">' + esc(fmt(r.created_at)) + '</span></div>'
+          + (c.length ? '<div class="m" style="display:flex;gap:16px;flex-wrap:wrap;margin-top:4px">' + c.join('') + '</div>' : '')
+          + (r.message ? '<div class="msg" style="margin:10px 0 0">' + esc(r.message) + '</div>' : '')
+          + '</div>';
+      }).join('') + '</div>';
 
-    ac.innerHTML = '<section class="card"><div class="sub-head"><div>'
-      + '<h2 class="sub-h2">문의 접수 <span class="muted">(' + rows.length + '건)</span></h2>'
-      + '<p class="muted sm">메일폼으로 접수된 문의입니다. (내 모든 카달로그 합산)</p></div>'
-      + '<div class="sub-tools">' + tools + '</div></div>' + body + '</section>';
+    ac.innerHTML = head + stats + body;
     var cb = document.getElementById('csvBtn'); if (cb) cb.addEventListener('click', exportCsv);
   }
 
