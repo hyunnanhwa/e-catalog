@@ -387,7 +387,7 @@
     function done(){ busy=false; if(btn) btn.disabled=false; }
     form.addEventListener('submit',function(ev){ ev.preventDefault(); var t=inp.value.trim(); if(!t||busy)return;
       busy=true; if(btn) btn.disabled=true; inp.value=''; add('user',t); var wait=add('ai typing','• • •');
-      if(!boot.chatUrl){ wait.remove(); add('ai','(미리보기에서는 AI 답변이 동작하지 않습니다)'); done(); return; }
+      if(!boot.chatUrl){ wait.remove(); add('ai','AI 답변이 아직 연결되지 않았습니다. (관리자: AI 채팅 설정을 완료해 주세요)'); done(); return; }
       fetch(boot.chatUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:boot.token, el:box.getAttribute('data-eid'), sid:sid, msg:t})})
         .then(function(r){ return r.json(); })
         .then(function(j){ wait.remove(); add('ai',(j&&(j.reply||j.err))||'…'); })
